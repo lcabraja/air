@@ -136,7 +136,7 @@ func main() {
 		for key := range keyEvents {
 			if key == keyboard.KeyCtrlC {
 				r.Stop()
-				os.Exit(0)
+				return
 			}
 
 			r.TriggerRefresh()
