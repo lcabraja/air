@@ -11,6 +11,7 @@ import (
 	"syscall"
 
 	"github.com/air-verse/air/runner"
+	"github.com/eiannone/keyboard"
 )
 
 var (
@@ -105,9 +106,47 @@ func main() {
 		log.Fatal(err)
 		return
 	}
+
+	// Setup keyboard event channel
+	keyEvents := make(chan keyboard.Key)
+	if err := keyboard.Open(); err != nil {
+		log.Fatal(err)
+	}
+	defer keyboard.Close()
+
+	// Start keyboard listener in a goroutine
 	go func() {
-		<-sigs
-		r.Stop()
+		for {
+			_, key, err := keyboard.GetKey()
+			if err != nil {
+				log.Printf("Error reading keyboard: %v", err)
+				continue
+			}
+			if key == keyboard.KeyCtrlR {
+				keyEvents <- key
+			}
+			if key == keyboard.KeyCtrlC {
+				keyEvents <- key
+			}
+		}
+	}()
+
+	// Handle signals and keyboard events
+	go func() {
+		for key := range keyEvents {
+			if key == keyboard.KeyCtrlC {
+				if !cfg.Log.Silent {
+					fmt.Println("Stopping")
+				}
+				r.Stop()
+				return
+			}
+
+			if !cfg.Log.Silent {
+				fmt.Println("\nManual refresh triggered by Ctrl+R")
+			}
+			r.TriggerRefresh()
+		}
 	}()
 
 	defer func() {

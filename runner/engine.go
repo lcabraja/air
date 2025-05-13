@@ -332,10 +332,12 @@ func (e *Engine) start() {
 			e.mainDebug("exit in start")
 			return
 		case filename = <-e.eventCh:
-			if !e.isIncludeExt(filename) && !e.checkIncludeFile(filename) {
+			if filename == "manual_refresh" {
+				e.mainLog("Manual refresh triggered")
+				// Skip file checks for manual refresh
+			} else if !e.isIncludeExt(filename) && !e.checkIncludeFile(filename) {
 				continue
-			}
-			if e.config.Build.ExcludeUnchanged {
+			} else if e.config.Build.ExcludeUnchanged {
 				if !e.isModified(filename) {
 					e.mainLog("skipping %s because contents unchanged", e.config.rel(filename))
 					continue
@@ -357,7 +359,9 @@ func (e *Engine) start() {
 				}
 			}
 
-			e.mainLog("%s has changed", e.config.rel(filename))
+			if filename != "manual_refresh" {
+				e.mainLog("%s has changed", e.config.rel(filename))
+			}
 		case <-firstRunCh:
 			// go down
 		}
@@ -715,4 +719,10 @@ func (e *Engine) Stop() {
 		e.runnerLog("failed to execute post_cmd, error: %s", err.Error())
 	}
 	close(e.exitCh)
+}
+
+// TriggerRefresh manually triggers a refresh of the application
+func (e *Engine) TriggerRefresh() {
+	e.mainLog("Manual refresh triggered")
+	e.eventCh <- "manual_refresh"
 }
