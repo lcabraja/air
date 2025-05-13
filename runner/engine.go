@@ -332,8 +332,7 @@ func (e *Engine) start() {
 			e.mainDebug("exit in start")
 			return
 		case filename = <-e.eventCh:
-			if filename == "manual_refresh" {
-				e.mainLog("Manual refresh triggered")
+			if filename == MANUAL_REFRESH {
 				// Skip file checks for manual refresh
 			} else if !e.isIncludeExt(filename) && !e.checkIncludeFile(filename) {
 				continue
@@ -359,7 +358,7 @@ func (e *Engine) start() {
 				}
 			}
 
-			if filename != "manual_refresh" {
+			if filename != MANUAL_REFRESH {
 				e.mainLog("%s has changed", e.config.rel(filename))
 			}
 		case <-firstRunCh:
@@ -722,7 +721,9 @@ func (e *Engine) Stop() {
 }
 
 // TriggerRefresh manually triggers a refresh of the application
+const MANUAL_REFRESH = "\\manual_refresh//"
+
 func (e *Engine) TriggerRefresh() {
-	e.mainLog("Manual refresh triggered")
-	e.eventCh <- "manual_refresh"
+	e.mainLog("manual refresh triggered")
+	e.eventCh <- MANUAL_REFRESH
 }

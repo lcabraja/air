@@ -135,16 +135,10 @@ func main() {
 	go func() {
 		for key := range keyEvents {
 			if key == keyboard.KeyCtrlC {
-				if !cfg.Log.Silent {
-					fmt.Println("Stopping")
-				}
 				r.Stop()
-				return
+				os.Exit(0)
 			}
 
-			if !cfg.Log.Silent {
-				fmt.Println("\nManual refresh triggered by Ctrl+R")
-			}
 			r.TriggerRefresh()
 		}
 	}()
