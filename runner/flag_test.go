@@ -22,8 +22,8 @@ func TestFlag(t *testing.T) {
 	testCases := []testCase{
 		{
 			name:     "test1",
-			args:     []string{"--build.cmd", "go build -o ./tmp/main ."},
-			expected: "go build -o ./tmp/main .",
+			args:     []string{"--build.cmd", "go build -o ./_air/main ."},
+			expected: "go build -o ./_air/main .",
 			key:      "build.cmd",
 		},
 		{
@@ -72,10 +72,10 @@ func TestConfigRuntimeArgs(t *testing.T) {
 	testCases := []testCase{
 		{
 			name: "test1",
-			args: []string{"--build.cmd", "go build -o ./tmp/main ."},
+			args: []string{"--build.cmd", "go build -o ./_air/main ."},
 			key:  "build.cmd",
 			check: func(t *testing.T, conf *Config) {
-				assert.Equal(t, "go build -o ./tmp/main .", conf.Build.Cmd)
+				assert.Equal(t, "go build -o ./_air/main .", conf.Build.Cmd)
 			},
 		},
 		{
@@ -120,9 +120,9 @@ func TestConfigRuntimeArgs(t *testing.T) {
 		},
 		{
 			name: "check full_bin",
-			args: []string{"--build.full_bin", "APP_ENV=dev APP_USER=air ./tmp/main"},
+			args: []string{"--build.full_bin", "APP_ENV=dev APP_USER=air ./_air/main"},
 			check: func(t *testing.T, conf *Config) {
-				assert.Equal(t, "APP_ENV=dev APP_USER=air ./tmp/main", conf.Build.Bin)
+				assert.Equal(t, "APP_ENV=dev APP_USER=air ./_air/main", conf.Build.Bin)
 			},
 		},
 

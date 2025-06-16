@@ -10,18 +10,18 @@ import (
 )
 
 const (
-	bin = `./tmp/main`
-	cmd = "go build -o ./tmp/main ."
+	bin = `./_air/main`
+	cmd = "go build -o ./_air/main ."
 )
 
 func getWindowsConfig() Config {
 	build := cfgBuild{
 		PreCmd:       []string{"echo Hello Air"},
-		Cmd:          "go build -o ./tmp/main .",
-		Bin:          "./tmp/main",
+		Cmd:          "go build -o ./_air/main .",
+		Bin:          "./_air/main",
 		Log:          "build-errors.log",
 		IncludeExt:   []string{"go", "tpl", "tmpl", "html"},
-		ExcludeDir:   []string{"assets", "tmp", "vendor", "testdata"},
+		ExcludeDir:   []string{"assets", "_air", "vendor", "testdata"},
 		ExcludeRegex: []string{"_test.go"},
 		Delay:        1000,
 		StopOnError:  true,
@@ -33,7 +33,7 @@ func getWindowsConfig() Config {
 
 	return Config{
 		Root:        ".",
-		TmpDir:      "tmp",
+		TmpDir:      "_air",
 		TestDataDir: "testdata",
 		Build:       build,
 	}
@@ -122,7 +122,7 @@ func TestConfPreprocess(t *testing.T) {
 	if err != nil {
 		t.Fatalf("preprocess error %v", err)
 	}
-	suffix := "/_testdata/toml/tmp/main"
+	suffix := "/_testdata/toml/_air/main"
 	binPath := df.Build.Bin
 	if !strings.HasSuffix(binPath, suffix) {
 		t.Fatalf("bin path is %s, but not have suffix  %s.", binPath, suffix)
@@ -154,7 +154,7 @@ func TestConfigWithRuntimeArgs(t *testing.T) {
 
 	t.Run("when using full_bin", func(t *testing.T) {
 		df := defaultConfig()
-		df.Build.FullBin = "./tmp/main"
+		df.Build.FullBin = "./_air/main"
 		if err := df.preprocess(nil); err != nil {
 			t.Fatalf("preprocess error %v", err)
 		}

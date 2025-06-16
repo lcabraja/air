@@ -720,11 +720,11 @@ func TestRebuildWhenRunCmdUsingDLV(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Should not be fail: %s.", err)
 	}
-	engine.config.Build.Cmd = "go build -gcflags='all=-N -l' -o ./tmp/main ."
-	engine.config.Build.Bin = ""
+	engine.config.Build.Cmd = "go build -gcflags='all=-N -l' -o ./_air/main ."
+	engine.config.Build.Bin = "./_air/main"
 	dlvPort, f := GetPort()
 	f()
-	engine.config.Build.FullBin = fmt.Sprintf("dlv exec --accept-multiclient --log --headless --continue --listen :%d --api-version 2 ./tmp/main", dlvPort)
+	engine.config.Build.FullBin = fmt.Sprintf("dlv exec --accept-multiclient --log --headless --continue --listen :%d --api-version 2 ./_air/main", dlvPort)
 	_ = engine.config.preprocess(nil)
 	go func() {
 		engine.Run()
@@ -808,7 +808,7 @@ func TestCheckNilSliceShouldBeenOverwrite(t *testing.T) {
 	config := `
 [build]
 cmd = "go build ."
-bin = "tmp/main"
+bin = "_air/main"
 exclude_regex = []
 exclude_dir = ["test"]
 exclude_file = ["main.go"]
