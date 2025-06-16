@@ -205,8 +205,8 @@ func readConfByName(name string) (*Config, error) {
 
 func defaultConfig() Config {
 	build := cfgBuild{
-		Cmd:          "go build -o ./tmp/main .",
-		Bin:          "./tmp/main",
+		Cmd:          "go build -o ./_air/main .",
+		Bin:          "./_air/main",
 		Log:          "build-errors.log",
 		IncludeExt:   []string{"go", "tpl", "tmpl", "html"},
 		IncludeDir:   []string{},
@@ -214,16 +214,17 @@ func defaultConfig() Config {
 		PostCmd:      []string{},
 		ExcludeFile:  []string{},
 		IncludeFile:  []string{},
-		ExcludeDir:   []string{"assets", "tmp", "vendor", "testdata"},
+		ExcludeDir:   []string{"assets", "_air", "vendor", "testdata"},
 		ArgsBin:      []string{},
 		ExcludeRegex: []string{"_test.go"},
 		Delay:        1000,
+		StopOnError:  true,
 		Rerun:        false,
 		RerunDelay:   500,
 	}
 	if runtime.GOOS == PlatformWindows {
-		build.Bin = `tmp\main.exe`
-		build.Cmd = "go build -o ./tmp/main.exe ."
+		build.Bin = `_air\main.exe`
+		build.Cmd = "go build -o ./_air/main.exe ."
 	}
 	log := cfgLog{
 		AddTime:  false,
@@ -241,7 +242,7 @@ func defaultConfig() Config {
 	}
 	return Config{
 		Root:        ".",
-		TmpDir:      "tmp",
+		TmpDir:      "_air",
 		TestDataDir: "testdata",
 		Build:       build,
 		Color:       color,
@@ -296,7 +297,7 @@ func (c *Config) preprocess(args map[string]TomlInfo) error {
 		return err
 	}
 	if c.TmpDir == "" {
-		c.TmpDir = "tmp"
+		c.TmpDir = "_air"
 	}
 	if c.TestDataDir == "" {
 		c.TestDataDir = "testdata"
