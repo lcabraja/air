@@ -14,24 +14,40 @@ func (e *Engine) killCmd(cmd *exec.Cmd) (pid int, err error) {
 	pid = cmd.Process.Pid
 
 	if e.config.Build.SendInterrupt {
-		// Sending a signal to make it clear to the process that it is time to turn off
+		e.mainDebug("sending interrupt signal to pid %d", pid)
+		// First try to kill the process group
 		if err = syscall.Kill(-pid, syscall.SIGINT); err != nil {
-			return
+			// If process group kill fails, try killing the process directly
+			if err = syscall.Kill(pid, syscall.SIGINT); err != nil {
+				return
+			}
 		}
 		time.Sleep(e.config.killDelay())
 	}
-	// https://stackoverflow.com/questions/22470193/why-wont-go-kill-a-child-process-correctly
+
+	// Try process group kill first
+	e.mainDebug("sending kill signal to pid %d", pid)
 	err = syscall.Kill(-pid, syscall.SIGKILL)
-	// Wait releases any resources associated with the Process.
+	if err != nil {
+		// If process group kill fails, try direct process kill
+		err = syscall.Kill(pid, syscall.SIGKILL)
+	}
+
+	// Wait releases any resources associated with the Process
+	e.mainDebug("waiting for process to exit")
 	_, _ = cmd.Process.Wait()
 	return pid, err
 }
 
 func (e *Engine) startCmd(cmd string) (*exec.Cmd, io.ReadCloser, io.ReadCloser, error) {
+	e.mainDebug("starting command: %s", cmd)
 	c := exec.Command("/bin/sh", "-c", cmd)
-	// because using pty cannot have same pgid
+
+	// Set process group for better process management
 	c.SysProcAttr = &syscall.SysProcAttr{
 		Setpgid: true,
+		// Ensure child processes are in the same process group
+		Pgid: 0,
 	}
 
 	stderr, err := c.StderrPipe()

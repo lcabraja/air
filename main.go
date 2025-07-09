@@ -101,7 +101,7 @@ func main() {
 	if debugMode && !cfg.Log.Silent {
 		fmt.Println("[debug] mode")
 	}
-	r, err := runner.NewEngineWithConfig(cfg, debugMode)
+	r, err := runner.NewEngine(cfgPath, cmdArgs, debugMode)
 	if err != nil {
 		log.Fatal(err)
 		return
