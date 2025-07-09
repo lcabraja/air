@@ -208,7 +208,7 @@ func defaultConfig() Config {
 		Cmd:          "go build -o ./_air/main .",
 		Bin:          "./_air/main",
 		Log:          "build-errors.log",
-		IncludeExt:   []string{"go", "tpl", "tmpl", "html"},
+		IncludeExt:   []string{"go", "tpl", "tmpl"},
 		IncludeDir:   []string{},
 		PreCmd:       []string{},
 		PostCmd:      []string{},

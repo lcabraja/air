@@ -822,7 +822,7 @@ include_file = ["test/not_a_test.go"]
 	if err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, []string{"go", "tpl", "tmpl", "html"}, engine.config.Build.IncludeExt)
+	assert.Equal(t, []string{"go", "tpl", "tmpl"}, engine.config.Build.IncludeExt)
 	assert.Equal(t, []string{}, engine.config.Build.ExcludeRegex)
 	assert.Equal(t, []string{"test"}, engine.config.Build.ExcludeDir)
 	// add new config

@@ -20,7 +20,7 @@ func getWindowsConfig() Config {
 		Cmd:          "go build -o ./_air/main .",
 		Bin:          "./_air/main",
 		Log:          "build-errors.log",
-		IncludeExt:   []string{"go", "tpl", "tmpl", "html"},
+		IncludeExt:   []string{"go", "tpl", "tmpl"},
 		ExcludeDir:   []string{"assets", "_air", "vendor", "testdata"},
 		ExcludeRegex: []string{"_test.go"},
 		Delay:        1000,

@@ -19,7 +19,7 @@ full_bin = "APP_ENV=dev APP_USER=air ./_air/main"
 # Add additional arguments when running binary (bin/full_bin). Will run './_air/main hello world'.
 args_bin = ["hello", "world"]
 # Watch these filename extensions.
-include_ext = ["go", "tpl", "tmpl", "html"]
+include_ext = ["go", "tpl", "tmpl"]
 # Ignore these filename extensions or directories.
 exclude_dir = ["assets", "_air", "vendor", "frontend/node_modules"]
 # Watch these directories if you specified.
